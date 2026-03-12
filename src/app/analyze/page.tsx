@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Upload, FileText, Loader2, CheckCircle, ArrowLeft } from "lucide-react";
@@ -26,6 +26,7 @@ export default function AnalyzePage() {
   const [state, setState] = useState<UploadState>("idle");
   const [dragActive, setDragActive] = useState(false);
   const [fileName, setFileName] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = useCallback(
     async (file: File) => {
@@ -33,21 +34,27 @@ export default function AnalyzePage() {
       setFileName(file.name);
       setState("uploading");
 
-      // Simulate upload
-      await new Promise((r) => setTimeout(r, 800));
+      await new Promise((r) => setTimeout(r, 400));
       setState("processing");
 
-      // Call mock API
+      // Send real file to PDFMux-powered API
       try {
+        const formData = new FormData();
+        formData.append("file", file);
+
         const res = await fetch("/api/parse-statement", {
           method: "POST",
-          body: new FormData(),
+          body: formData,
         });
         const data = await res.json();
 
         if (data.success) {
           // Store in sessionStorage for results page
           sessionStorage.setItem("statementData", JSON.stringify(data.data));
+          if (data.warning) {
+            sessionStorage.setItem("parseWarning", data.warning);
+          }
+          sessionStorage.setItem("parseSource", data.source || "unknown");
           setState("done");
           await new Promise((r) => setTimeout(r, 600));
           router.push("/results");
@@ -109,6 +116,18 @@ export default function AnalyzePage() {
             Drop your PDF statement below. We&apos;ll analyze it in seconds.
           </p>
 
+          {/* Hidden file input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) handleFile(file);
+            }}
+          />
+
           {/* Drop Zone */}
           <div
             className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all cursor-pointer ${
@@ -122,7 +141,7 @@ export default function AnalyzePage() {
             onDragEnter={handleDrag}
             onDragOver={handleDrag}
             onDragLeave={handleDrag}
-            onClick={state === "idle" ? handleDemoUpload : undefined}
+            onClick={state === "idle" ? () => fileInputRef.current?.click() : undefined}
           >
             <AnimatePresence mode="wait">
               {state === "idle" && (
@@ -140,7 +159,7 @@ export default function AnalyzePage() {
                     Drag & drop your PDF statement here
                   </p>
                   <p className="text-xs text-[#a3a3a3]">
-                    or click to select (demo mode — uses sample data)
+                    or click to browse your files
                   </p>
                 </motion.div>
               )}
@@ -199,8 +218,18 @@ export default function AnalyzePage() {
             </AnimatePresence>
           </div>
 
+          {/* Demo mode button */}
+          {state === "idle" && (
+            <button
+              onClick={handleDemoUpload}
+              className="mt-4 w-full text-center text-xs text-[#a3a3a3] hover:text-[#059669] transition-colors py-2"
+            >
+              No PDF handy? <span className="underline">Try with sample data →</span>
+            </button>
+          )}
+
           {/* Supported Banks */}
-          <div className="mt-8 text-center">
+          <div className="mt-6 text-center">
             <p className="text-xs text-[#a3a3a3] mb-3">Supported banks</p>
             <div className="flex flex-wrap justify-center gap-2">
               {supportedBanks.map((bank) => (
