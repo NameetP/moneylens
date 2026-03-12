@@ -1,0 +1,162 @@
+[
+  {
+    "id": "enbd-go",
+    "name": "GO Rewards Credit Card",
+    "bank": "Emirates NBD",
+    "annualFee": 0,
+    "rewardRates": {
+      "dining": 5,
+      "groceries": 3,
+      "shopping": 2,
+      "transport": 1,
+      "subscriptions": 1,
+      "other": 1
+    },
+    "highlights": ["No annual fee", "5% cashback on dining", "Free airport lounge (2x/year)"],
+    "applyUrl": "#"
+  },
+  {
+    "id": "adcb-touchpoints",
+    "name": "TouchPoints Infinite Credit Card",
+    "bank": "ADCB",
+    "annualFee": 500,
+    "rewardRates": {
+      "dining": 4,
+      "groceries": 4,
+      "shopping": 3,
+      "transport": 2,
+      "subscriptions": 2,
+      "other": 1.5
+    },
+    "highlights": ["4x points on groceries & dining", "Free valet parking", "Airport lounge access"],
+    "applyUrl": "#"
+  },
+  {
+    "id": "fab-infinite",
+    "name": "Infinite Credit Card",
+    "bank": "First Abu Dhabi Bank",
+    "annualFee": 750,
+    "rewardRates": {
+      "dining": 3,
+      "groceries": 3,
+      "shopping": 5,
+      "transport": 2,
+      "subscriptions": 2,
+      "other": 2
+    },
+    "highlights": ["5% cashback on shopping", "Unlimited airport lounge", "Concierge service"],
+    "applyUrl": "#"
+  },
+  {
+    "id": "hsbc-cashback",
+    "name": "Cashback Credit Card",
+    "bank": "HSBC",
+    "annualFee": 0,
+    "rewardRates": {
+      "dining": 3,
+      "groceries": 5,
+      "shopping": 2,
+      "transport": 3,
+      "subscriptions": 2,
+      "other": 1
+    },
+    "highlights": ["5% cashback on groceries", "3% on dining & transport", "No annual fee"],
+    "applyUrl": "#"
+  },
+  {
+    "id": "mashreq-cashback",
+    "name": "Cashback Gold Credit Card",
+    "bank": "Mashreq",
+    "annualFee": 250,
+    "rewardRates": {
+      "dining": 4,
+      "groceries": 3,
+      "shopping": 4,
+      "transport": 2,
+      "subscriptions": 3,
+      "other": 1
+    },
+    "highlights": ["4% on dining & shopping", "3% on subscriptions", "SmartSaver integration"],
+    "applyUrl": "#"
+  },
+  {
+    "id": "dib-prime",
+    "name": "Prime Credit Card",
+    "bank": "Dubai Islamic Bank",
+    "annualFee": 0,
+    "rewardRates": {
+      "dining": 3,
+      "groceries": 3,
+      "shopping": 3,
+      "transport": 3,
+      "subscriptions": 3,
+      "other": 2
+    },
+    "highlights": ["Sharia-compliant", "Flat 3% on most categories", "No annual fee"],
+    "applyUrl": "#"
+  },
+  {
+    "id": "rak-titanium",
+    "name": "Titanium Credit Card",
+    "bank": "RAK Bank",
+    "annualFee": 150,
+    "rewardRates": {
+      "dining": 5,
+      "groceries": 2,
+      "shopping": 3,
+      "transport": 4,
+      "subscriptions": 1,
+      "other": 1
+    },
+    "highlights": ["5% on dining", "4% on transport & fuel", "Low forex markup"],
+    "applyUrl": "#"
+  },
+  {
+    "id": "cbd-max",
+    "name": "MAX Rewards Credit Card",
+    "bank": "Commercial Bank of Dubai",
+    "annualFee": 300,
+    "rewardRates": {
+      "dining": 3,
+      "groceries": 4,
+      "shopping": 3,
+      "transport": 2,
+      "subscriptions": 4,
+      "other": 1.5
+    },
+    "highlights": ["4% on groceries & subscriptions", "Free movie tickets (4x/month)", "Buy 1 Get 1 dining"],
+    "applyUrl": "#"
+  },
+  {
+    "id": "sc-infinite",
+    "name": "Infinite Credit Card",
+    "bank": "Standard Chartered",
+    "annualFee": 900,
+    "rewardRates": {
+      "dining": 4,
+      "groceries": 3,
+      "shopping": 4,
+      "transport": 3,
+      "subscriptions": 2,
+      "other": 2.5
+    },
+    "highlights": ["4% on dining & shopping", "Priority Pass lounge", "Golf privileges"],
+    "applyUrl": "#"
+  },
+  {
+    "id": "enbd-beyond",
+    "name": "Beyond Infinite Credit Card",
+    "bank": "Emirates NBD",
+    "annualFee": 1200,
+    "rewardRates": {
+      "dining": 6,
+      "groceries": 4,
+      "shopping": 5,
+      "transport": 3,
+      "subscriptions": 3,
+      "other": 2
+    },
+    "highlights": ["6% on dining (highest in UAE)", "Unlimited lounge access", "Premium concierge", "Travel insurance included"],
+    "applyUrl": "#"
+  }
+]
