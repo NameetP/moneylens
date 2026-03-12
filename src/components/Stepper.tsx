@@ -21,10 +21,10 @@ export function Stepper({ steps, currentStep }: StepperProps) {
               <motion.div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
                   isCompleted
-                    ? "bg-[#22c55e] text-black"
+                    ? "bg-[#059669] text-white"
                     : isActive
-                    ? "bg-white text-black"
-                    : "bg-zinc-800 text-zinc-500"
+                    ? "bg-white text-[#059669] border-2 border-[#059669] shadow-sm"
+                    : "bg-[#f5f5f4] text-[#a3a3a3] border border-[#e5e5e5]"
                 }`}
                 initial={false}
                 animate={{
@@ -37,10 +37,10 @@ export function Stepper({ steps, currentStep }: StepperProps) {
               <span
                 className={`text-sm hidden sm:inline ${
                   isActive
-                    ? "text-white font-medium"
+                    ? "text-[#0a0a0a] font-medium"
                     : isCompleted
-                    ? "text-zinc-400"
-                    : "text-zinc-600"
+                    ? "text-[#525252]"
+                    : "text-[#a3a3a3]"
                 }`}
               >
                 {step}
@@ -49,7 +49,7 @@ export function Stepper({ steps, currentStep }: StepperProps) {
             {i < steps.length - 1 && (
               <div
                 className={`w-8 sm:w-12 h-px ${
-                  isCompleted ? "bg-[#22c55e]" : "bg-zinc-800"
+                  isCompleted ? "bg-[#059669]" : "bg-[#e5e5e5]"
                 }`}
               />
             )}

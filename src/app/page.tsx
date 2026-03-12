@@ -39,42 +39,42 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto w-full">
+      <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto w-full border-b border-gray-100">
         <Logo />
         <Link
           href="/analyze"
-          className="text-sm text-zinc-400 hover:text-white transition-colors"
+          className="text-sm text-[#525252] hover:text-[#0a0a0a] transition-colors font-medium"
         >
           Get Started
         </Link>
       </nav>
 
       {/* Hero */}
-      <main className="flex-1 flex flex-col items-center px-6 pt-16 sm:pt-24 pb-24">
+      <main className="flex-1 flex flex-col items-center px-6 pt-16 sm:pt-24 pb-24 bg-gradient-to-b from-white to-[#fafafa]">
         <div className="max-w-2xl mx-auto text-center">
           <motion.div
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs text-zinc-400 mb-8"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#f5f5f4] border border-[#e5e5e5] text-xs text-[#525252] mb-8"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e] animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#059669] animate-pulse" />
             Works with all major UAE banks
           </motion.div>
 
           <motion.h1
-            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.1] mb-6"
+            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-[-0.02em] leading-[1.1] mb-6 text-[#0a0a0a]"
             custom={1}
             variants={fadeUp}
             initial="hidden"
             animate="visible"
           >
             Your money has a leak.{" "}
-            <span className="text-[#22c55e]">Find it in 60 seconds.</span>
+            <span className="text-[#059669]">Find it in 60 seconds.</span>
           </motion.h1>
 
           <motion.p
-            className="text-lg text-zinc-400 mb-10 max-w-lg mx-auto"
+            className="text-lg text-[#525252] mb-10 max-w-lg mx-auto leading-relaxed"
             custom={2}
             variants={fadeUp}
             initial="hidden"
@@ -92,7 +92,7 @@ export default function Home() {
           >
             <Link
               href="/analyze"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-[#22c55e] hover:bg-[#16a34a] text-black font-semibold rounded-xl transition-colors text-lg group"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-[#059669] hover:bg-[#047857] text-white font-semibold rounded-2xl transition-all text-lg group shadow-lg shadow-[#059669]/20 hover:shadow-xl hover:shadow-[#059669]/25"
             >
               Scan My Statement
               <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
@@ -112,24 +112,24 @@ export default function Home() {
           {valueProps.map((prop) => (
             <motion.div
               key={prop.title}
-              className="flex flex-col items-center text-center p-6 rounded-2xl bg-zinc-900/50 border border-zinc-800/50"
+              className="flex flex-col items-center text-center p-6 rounded-2xl bg-white border border-[#e5e5e5] shadow-sm hover:shadow-md transition-shadow"
               variants={{
                 hidden: { opacity: 0, y: 20 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
               }}
             >
-              <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center mb-4">
-                <prop.icon className="w-5 h-5 text-[#22c55e]" />
+              <div className="w-10 h-10 rounded-xl bg-[#ecfdf5] flex items-center justify-center mb-4">
+                <prop.icon className="w-5 h-5 text-[#059669]" />
               </div>
-              <h3 className="font-semibold mb-2">{prop.title}</h3>
-              <p className="text-sm text-zinc-500">{prop.description}</p>
+              <h3 className="font-semibold mb-2 text-[#0a0a0a]">{prop.title}</h3>
+              <p className="text-sm text-[#737373]">{prop.description}</p>
             </motion.div>
           ))}
         </motion.div>
 
         {/* Trust bar */}
         <motion.div
-          className="flex items-center gap-2 mt-16 text-sm text-zinc-600"
+          className="flex items-center gap-2 mt-16 text-sm text-[#a3a3a3] bg-[#f5f5f4] px-4 py-2 rounded-full"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}

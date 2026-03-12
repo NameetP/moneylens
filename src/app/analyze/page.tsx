@@ -84,12 +84,12 @@ export default function AnalyzePage() {
   }, [handleFile]);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto w-full">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-[#fafafa]">
+      <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto w-full border-b border-gray-100">
         <Logo />
         <Link
           href="/"
-          className="flex items-center gap-1 text-sm text-zinc-400 hover:text-white transition-colors"
+          className="flex items-center gap-1 text-sm text-[#525252] hover:text-[#0a0a0a] transition-colors font-medium"
         >
           <ArrowLeft className="w-4 h-4" />
           Back
@@ -102,10 +102,10 @@ export default function AnalyzePage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="text-3xl font-bold text-center mb-2">
+          <h1 className="text-3xl font-bold text-center mb-2 tracking-[-0.02em] text-[#0a0a0a]">
             Upload your credit card statement
           </h1>
-          <p className="text-zinc-500 text-center mb-8">
+          <p className="text-[#737373] text-center mb-8">
             Drop your PDF statement below. We&apos;ll analyze it in seconds.
           </p>
 
@@ -113,11 +113,11 @@ export default function AnalyzePage() {
           <div
             className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all cursor-pointer ${
               dragActive
-                ? "border-[#22c55e] bg-[#22c55e]/5"
+                ? "border-[#059669] bg-[#ecfdf5]"
                 : state === "idle"
-                ? "border-zinc-800 hover:border-zinc-600 bg-zinc-900/30"
-                : "border-zinc-800 bg-zinc-900/30"
-            }`}
+                ? "border-[#d4d4d4] hover:border-[#a3a3a3] bg-white"
+                : "border-[#d4d4d4] bg-white"
+            } shadow-sm`}
             onDrop={handleDrop}
             onDragEnter={handleDrag}
             onDragOver={handleDrag}
@@ -133,13 +133,13 @@ export default function AnalyzePage() {
                   exit={{ opacity: 0 }}
                   className="flex flex-col items-center"
                 >
-                  <div className="w-14 h-14 rounded-2xl bg-zinc-800 flex items-center justify-center mb-4">
-                    <Upload className="w-6 h-6 text-zinc-400" />
+                  <div className="w-14 h-14 rounded-2xl bg-[#f5f5f4] flex items-center justify-center mb-4">
+                    <Upload className="w-6 h-6 text-[#737373]" />
                   </div>
-                  <p className="text-sm text-zinc-400 mb-1">
+                  <p className="text-sm text-[#525252] mb-1">
                     Drag & drop your PDF statement here
                   </p>
-                  <p className="text-xs text-zinc-600">
+                  <p className="text-xs text-[#a3a3a3]">
                     or click to select (demo mode — uses sample data)
                   </p>
                 </motion.div>
@@ -153,12 +153,12 @@ export default function AnalyzePage() {
                   exit={{ opacity: 0 }}
                   className="flex flex-col items-center"
                 >
-                  <FileText className="w-8 h-8 text-zinc-400 mb-3" />
-                  <p className="text-sm text-white mb-1">{fileName}</p>
-                  <p className="text-xs text-zinc-500">Uploading...</p>
-                  <div className="w-48 h-1 bg-zinc-800 rounded-full mt-4 overflow-hidden">
+                  <FileText className="w-8 h-8 text-[#525252] mb-3" />
+                  <p className="text-sm text-[#0a0a0a] mb-1">{fileName}</p>
+                  <p className="text-xs text-[#737373]">Uploading...</p>
+                  <div className="w-48 h-1 bg-[#e5e5e5] rounded-full mt-4 overflow-hidden">
                     <motion.div
-                      className="h-full bg-[#22c55e] rounded-full"
+                      className="h-full bg-[#059669] rounded-full"
                       initial={{ width: "0%" }}
                       animate={{ width: "100%" }}
                       transition={{ duration: 0.8 }}
@@ -175,11 +175,11 @@ export default function AnalyzePage() {
                   exit={{ opacity: 0 }}
                   className="flex flex-col items-center"
                 >
-                  <Loader2 className="w-8 h-8 text-[#22c55e] animate-spin mb-3" />
-                  <p className="text-sm text-white mb-1">
+                  <Loader2 className="w-8 h-8 text-[#059669] animate-spin mb-3" />
+                  <p className="text-sm text-[#0a0a0a] mb-1">
                     Analyzing your statement...
                   </p>
-                  <p className="text-xs text-zinc-500">
+                  <p className="text-xs text-[#737373]">
                     Categorizing transactions & matching cards
                   </p>
                 </motion.div>
@@ -192,8 +192,8 @@ export default function AnalyzePage() {
                   animate={{ opacity: 1, scale: 1 }}
                   className="flex flex-col items-center"
                 >
-                  <CheckCircle className="w-8 h-8 text-[#22c55e] mb-3" />
-                  <p className="text-sm text-white">Analysis complete!</p>
+                  <CheckCircle className="w-8 h-8 text-[#059669] mb-3" />
+                  <p className="text-sm text-[#0a0a0a]">Analysis complete!</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -201,12 +201,12 @@ export default function AnalyzePage() {
 
           {/* Supported Banks */}
           <div className="mt-8 text-center">
-            <p className="text-xs text-zinc-600 mb-3">Supported banks</p>
+            <p className="text-xs text-[#a3a3a3] mb-3">Supported banks</p>
             <div className="flex flex-wrap justify-center gap-2">
               {supportedBanks.map((bank) => (
                 <span
                   key={bank}
-                  className="px-3 py-1 text-xs rounded-full bg-zinc-900 border border-zinc-800 text-zinc-500"
+                  className="px-3 py-1 text-xs rounded-full bg-[#f5f5f4] border border-[#e5e5e5] text-[#737373]"
                 >
                   {bank}
                 </span>

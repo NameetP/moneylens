@@ -11,8 +11,10 @@ interface Props {
 export function SpendingBreakdown({ data }: Props) {
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-1">Spending Breakdown</h2>
-      <p className="text-zinc-500 text-sm mb-8">
+      <h2 className="text-2xl font-bold mb-1 tracking-[-0.02em] text-[#0a0a0a]">
+        Spending Breakdown
+      </h2>
+      <p className="text-[#737373] text-sm mb-8">
         Here&apos;s where your AED{" "}
         {data.totalSpend.toLocaleString("en-AE")} went this month.
       </p>
@@ -31,8 +33,8 @@ export function SpendingBreakdown({ data }: Props) {
                   outerRadius={110}
                   dataKey="amount"
                   nameKey="name"
-                  strokeWidth={2}
-                  stroke="#09090b"
+                  strokeWidth={3}
+                  stroke="#ffffff"
                 >
                   {data.categories.map((cat) => (
                     <Cell key={cat.name} fill={cat.color} />
@@ -40,11 +42,12 @@ export function SpendingBreakdown({ data }: Props) {
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    background: "#18181b",
-                    border: "1px solid #27272a",
+                    background: "#ffffff",
+                    border: "1px solid #e5e5e5",
                     borderRadius: "12px",
                     fontSize: "13px",
-                    color: "#fafafa",
+                    color: "#0a0a0a",
+                    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
                   }}
                   formatter={(value) => [
                     `AED ${Number(value).toLocaleString("en-AE")}`,
@@ -55,11 +58,11 @@ export function SpendingBreakdown({ data }: Props) {
             </ResponsiveContainer>
             {/* Center text */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-xs text-zinc-500">Total</span>
+              <span className="text-xs text-[#a3a3a3]">Total</span>
               <AnimatedNumber
                 value={data.totalSpend}
                 prefix="AED "
-                className="text-xl font-bold"
+                className="text-xl font-bold text-[#0a0a0a]"
               />
             </div>
           </div>
@@ -70,7 +73,7 @@ export function SpendingBreakdown({ data }: Props) {
           {data.categories.map((cat) => (
             <div
               key={cat.name}
-              className="flex items-center gap-3 p-3 rounded-xl bg-zinc-900/50 border border-zinc-800/50"
+              className="flex items-center gap-3 p-3 rounded-xl bg-white border border-[#e5e5e5] shadow-sm hover:shadow-md transition-shadow"
             >
               <div
                 className="w-3 h-3 rounded-full shrink-0"
@@ -78,14 +81,16 @@ export function SpendingBreakdown({ data }: Props) {
               />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">{cat.name}</span>
-                  <span className="text-sm font-mono">
+                  <span className="text-sm font-medium text-[#0a0a0a]">
+                    {cat.name}
+                  </span>
+                  <span className="text-sm font-mono text-[#0a0a0a]">
                     AED {cat.amount.toLocaleString("en-AE")}
                   </span>
                 </div>
                 <div className="flex items-center justify-between mt-1">
                   <div className="flex-1 mr-3">
-                    <div className="h-1 bg-zinc-800 rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-[#f5f5f4] rounded-full overflow-hidden">
                       <div
                         className="h-full rounded-full transition-all duration-1000"
                         style={{
@@ -95,7 +100,7 @@ export function SpendingBreakdown({ data }: Props) {
                       />
                     </div>
                   </div>
-                  <span className="text-xs text-zinc-500 tabular-nums">
+                  <span className="text-xs text-[#a3a3a3] tabular-nums">
                     {cat.percentage}% &middot; {cat.transactions} txns
                   </span>
                 </div>

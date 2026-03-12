@@ -59,20 +59,27 @@ export function LoanForm({ defaultAmount }: Props) {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
       >
-        <CheckCircle className="w-16 h-16 text-[#22c55e] mx-auto mb-4" />
-        <h2 className="text-2xl font-bold mb-2">Application Submitted!</h2>
-        <p className="text-zinc-400 mb-4">
+        <CheckCircle className="w-16 h-16 text-[#059669] mx-auto mb-4" />
+        <h2 className="text-2xl font-bold mb-2 text-[#0a0a0a]">
+          Application Submitted!
+        </h2>
+        <p className="text-[#525252] mb-4">
           A personal loan specialist will contact you within 24 hours.
         </p>
-        <p className="text-sm text-zinc-600">Reference: {refId}</p>
+        <p className="text-sm text-[#a3a3a3]">Reference: {refId}</p>
       </motion.div>
     );
   }
 
+  const inputClasses =
+    "w-full px-4 py-2.5 bg-white border border-[#e5e5e5] rounded-xl text-sm text-[#0a0a0a] placeholder:text-[#a3a3a3] focus:outline-none focus:ring-2 focus:ring-[#059669]/20 focus:border-[#059669] transition-all shadow-sm";
+
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-1">Get a Better Rate</h2>
-      <p className="text-zinc-500 text-sm mb-8">
+      <h2 className="text-2xl font-bold mb-1 tracking-[-0.02em] text-[#0a0a0a]">
+        Get a Better Rate
+      </h2>
+      <p className="text-[#737373] text-sm mb-8">
         Fill in your details and we&apos;ll connect you with the best personal
         loan offers.
       </p>
@@ -80,7 +87,7 @@ export function LoanForm({ defaultAmount }: Props) {
       <form onSubmit={handleSubmit} className="max-w-lg mx-auto space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs text-zinc-500 mb-1.5">
+            <label className="block text-xs text-[#525252] mb-1.5 font-medium">
               Full Name
             </label>
             <input
@@ -89,37 +96,41 @@ export function LoanForm({ defaultAmount }: Props) {
               value={form.name}
               onChange={(e) => update("name", e.target.value)}
               placeholder="Ahmed Al Maktoum"
-              className="w-full px-4 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
+              className={inputClasses}
             />
           </div>
           <div>
-            <label className="block text-xs text-zinc-500 mb-1.5">Phone</label>
+            <label className="block text-xs text-[#525252] mb-1.5 font-medium">
+              Phone
+            </label>
             <input
               type="tel"
               required
               value={form.phone}
               onChange={(e) => update("phone", e.target.value)}
               placeholder="+971 50 123 4567"
-              className="w-full px-4 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
+              className={inputClasses}
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs text-zinc-500 mb-1.5">Email</label>
+          <label className="block text-xs text-[#525252] mb-1.5 font-medium">
+            Email
+          </label>
           <input
             type="email"
             required
             value={form.email}
             onChange={(e) => update("email", e.target.value)}
             placeholder="ahmed@email.com"
-            className="w-full px-4 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
+            className={inputClasses}
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs text-zinc-500 mb-1.5">
+            <label className="block text-xs text-[#525252] mb-1.5 font-medium">
               Employer
             </label>
             <input
@@ -128,17 +139,17 @@ export function LoanForm({ defaultAmount }: Props) {
               value={form.employer}
               onChange={(e) => update("employer", e.target.value)}
               placeholder="Company name"
-              className="w-full px-4 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
+              className={inputClasses}
             />
           </div>
           <div>
-            <label className="block text-xs text-zinc-500 mb-1.5">
+            <label className="block text-xs text-[#525252] mb-1.5 font-medium">
               Salary Range
             </label>
             <select
               value={form.salaryRange}
               onChange={(e) => update("salaryRange", e.target.value)}
-              className="w-full px-4 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-white focus:outline-none focus:border-zinc-600 transition-colors appearance-none"
+              className={`${inputClasses} appearance-none`}
             >
               {salaryRanges.map((r) => (
                 <option key={r} value={r}>
@@ -151,7 +162,7 @@ export function LoanForm({ defaultAmount }: Props) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs text-zinc-500 mb-1.5">
+            <label className="block text-xs text-[#525252] mb-1.5 font-medium">
               Desired Amount (AED)
             </label>
             <input
@@ -159,17 +170,17 @@ export function LoanForm({ defaultAmount }: Props) {
               required
               value={form.desiredAmount}
               onChange={(e) => update("desiredAmount", e.target.value)}
-              className="w-full px-4 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
+              className={inputClasses}
             />
           </div>
           <div>
-            <label className="block text-xs text-zinc-500 mb-1.5">
+            <label className="block text-xs text-[#525252] mb-1.5 font-medium">
               Tenure
             </label>
             <select
               value={form.tenure}
               onChange={(e) => update("tenure", e.target.value)}
-              className="w-full px-4 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-white focus:outline-none focus:border-zinc-600 transition-colors appearance-none"
+              className={`${inputClasses} appearance-none`}
             >
               {tenures.map((t) => (
                 <option key={t} value={t}>
@@ -186,9 +197,9 @@ export function LoanForm({ defaultAmount }: Props) {
             type="checkbox"
             checked={consent}
             onChange={(e) => setConsent(e.target.checked)}
-            className="mt-1 w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-[#22c55e] focus:ring-[#22c55e] focus:ring-offset-0 accent-[#22c55e]"
+            className="mt-1 w-4 h-4 rounded border-[#d4d4d4] text-[#059669] focus:ring-[#059669] focus:ring-offset-0 accent-[#059669]"
           />
-          <span className="text-xs text-zinc-500 leading-relaxed">
+          <span className="text-xs text-[#737373] leading-relaxed">
             I consent to being contacted by personal loan providers. My
             information will be shared with licensed UAE financial institutions
             for the purpose of loan comparison.
@@ -198,7 +209,7 @@ export function LoanForm({ defaultAmount }: Props) {
         <button
           type="submit"
           disabled={!consent || submitting}
-          className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#22c55e] hover:bg-[#16a34a] text-black font-semibold rounded-xl transition-colors disabled:opacity-50 disabled:pointer-events-none"
+          className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#059669] hover:bg-[#047857] text-white font-semibold rounded-xl transition-colors shadow-lg shadow-[#059669]/20 disabled:opacity-50 disabled:pointer-events-none"
         >
           {submitting ? (
             <Loader2 className="w-4 h-4 animate-spin" />

@@ -45,15 +45,17 @@ export function CardRecommendations({ categories }: Props) {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="w-6 h-6 border-2 border-zinc-700 border-t-[#22c55e] rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-[#e5e5e5] border-t-[#059669] rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-1">Better Cards For You</h2>
-      <p className="text-zinc-500 text-sm mb-8">
+      <h2 className="text-2xl font-bold mb-1 tracking-[-0.02em] text-[#0a0a0a]">
+        Better Cards For You
+      </h2>
+      <p className="text-[#737373] text-sm mb-8">
         Based on your spending pattern, these cards could save you more.
       </p>
 
@@ -61,24 +63,24 @@ export function CardRecommendations({ categories }: Props) {
         {cards.map((card, i) => (
           <motion.div
             key={card.id}
-            className="p-5 rounded-2xl bg-zinc-900/50 border border-zinc-800/50 hover:border-zinc-700/50 transition-colors"
+            className="p-5 rounded-2xl bg-white border border-[#e5e5e5] shadow-sm hover:shadow-md transition-shadow"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.15 }}
           >
             <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center shrink-0">
-                <CreditCard className="w-6 h-6 text-zinc-400" />
+              <div className="w-12 h-12 rounded-xl bg-[#f5f5f4] flex items-center justify-center shrink-0">
+                <CreditCard className="w-6 h-6 text-[#525252]" />
               </div>
 
               <div className="flex-1 min-w-0">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                   <div>
-                    <h3 className="font-semibold">{card.name}</h3>
-                    <p className="text-sm text-zinc-500">{card.bank}</p>
+                    <h3 className="font-semibold text-[#0a0a0a]">{card.name}</h3>
+                    <p className="text-sm text-[#737373]">{card.bank}</p>
                   </div>
                   <div className="text-right">
-                    <div className="flex items-center gap-1 text-[#22c55e]">
+                    <div className="flex items-center gap-1 text-[#059669]">
                       <TrendingUp className="w-4 h-4" />
                       <AnimatedNumber
                         value={card.netAnnualBenefit}
@@ -87,7 +89,7 @@ export function CardRecommendations({ categories }: Props) {
                         className="text-lg font-bold"
                       />
                     </div>
-                    <p className="text-xs text-zinc-600">net annual benefit</p>
+                    <p className="text-xs text-[#a3a3a3]">net annual benefit</p>
                   </div>
                 </div>
 
@@ -95,15 +97,15 @@ export function CardRecommendations({ categories }: Props) {
                   {card.highlights.map((h) => (
                     <span
                       key={h}
-                      className="px-2.5 py-1 text-xs rounded-lg bg-zinc-800 text-zinc-400"
+                      className="px-2.5 py-1 text-xs rounded-lg bg-[#f5f5f4] text-[#525252] border border-[#e5e5e5]"
                     >
                       {h}
                     </span>
                   ))}
                 </div>
 
-                <div className="flex items-center justify-between mt-4 pt-3 border-t border-zinc-800/50">
-                  <div className="flex gap-4 text-xs text-zinc-500">
+                <div className="flex items-center justify-between mt-4 pt-3 border-t border-[#f5f5f4]">
+                  <div className="flex gap-4 text-xs text-[#737373]">
                     <span>
                       Annual fee:{" "}
                       {card.annualFee === 0
@@ -117,7 +119,7 @@ export function CardRecommendations({ categories }: Props) {
                   </div>
                   <a
                     href={card.applyUrl}
-                    className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-[#22c55e] text-black hover:bg-[#16a34a] transition-colors"
+                    className="flex items-center gap-1 px-4 py-1.5 text-xs font-medium rounded-lg bg-[#059669] text-white hover:bg-[#047857] transition-colors shadow-sm"
                   >
                     Apply
                     <ExternalLink className="w-3 h-3" />
