@@ -17,21 +17,47 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Real PDF → PDFMux extraction
+    // Security: limit file size to 10MB
+    const MAX_SIZE = 10 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      return NextResponse.json({
+        success: false,
+        error: "File too large. Maximum size is 10MB.",
+      }, { status: 400 });
+    }
+
+    // Validate file type
+    if (!file.name.toLowerCase().endsWith(".pdf")) {
+      return NextResponse.json({
+        success: false,
+        error: "Only PDF files are supported.",
+      }, { status: 400 });
+    }
+
+    // Real PDF → parse with pdf-parse + regex extraction
     const buffer = Buffer.from(await file.arrayBuffer());
 
     const parsed = await parseStatement(buffer);
 
+    // Validate that we got meaningful data
+    if (parsed.transactions.length === 0 && parsed.totalSpend === 0) {
+      return NextResponse.json({
+        success: true,
+        source: "fallback",
+        warning: "Could not extract transactions from your statement. The format may not be supported yet. Showing sample data instead.",
+        data: mockStatementData,
+      });
+    }
+
     return NextResponse.json({
       success: true,
-      source: "pdfmux",
+      source: "parsed",
       data: parsed,
     });
   } catch (error) {
     console.error("Statement parse error:", error);
 
-    // Graceful fallback: if PDFMux fails, return mock with a warning
-    // This keeps the app usable during development / if pdfmux isn't installed
+    // Graceful fallback: return mock with a warning
     return NextResponse.json({
       success: true,
       source: "fallback",

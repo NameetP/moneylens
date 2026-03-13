@@ -14,6 +14,8 @@ export interface StatementData {
   minimumDue: number;
   outstandingBalance: number;
   interestRate: number;
+  creditLimit?: number;
+  totalPayments?: number;
   categories: {
     name: string;
     amount: number;

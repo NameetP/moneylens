@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+// motion/AnimatePresence removed — React 19 + Framer Motion exit animations cause stale renders
+import { ArrowLeft, ArrowRight, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { Footer } from "@/components/Footer";
 import { Stepper } from "@/components/Stepper";
 import type { StatementData } from "@/data/mock-statement";
 import { SpendingBreakdown } from "./SpendingBreakdown";
@@ -20,6 +21,8 @@ export default function ResultsPage() {
   const [data, setData] = useState<StatementData | null>(null);
   const [step, setStep] = useState(0);
   const [debtData, setDebtData] = useState<Record<string, unknown> | null>(null);
+  const [parseWarning, setParseWarning] = useState<string | null>(null);
+  const [parseSource, setParseSource] = useState<string>("unknown");
 
   useEffect(() => {
     const stored = sessionStorage.getItem("statementData");
@@ -27,7 +30,16 @@ export default function ResultsPage() {
       router.push("/analyze");
       return;
     }
-    setData(JSON.parse(stored));
+    try {
+      setData(JSON.parse(stored));
+    } catch {
+      router.push("/analyze");
+      return;
+    }
+    const warning = sessionStorage.getItem("parseWarning");
+    const source = sessionStorage.getItem("parseSource");
+    if (warning) setParseWarning(warning);
+    if (source) setParseSource(source);
   }, [router]);
 
   useEffect(() => {
@@ -57,7 +69,7 @@ export default function ResultsPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-[#fafafa]">
-      <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto w-full border-b border-gray-100">
+      <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto w-full border-b border-[#e5e5e5]">
         <Logo />
         <Link
           href="/analyze"
@@ -79,29 +91,48 @@ export default function ResultsPage() {
 
         <Stepper steps={visibleSteps} currentStep={step} />
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            {step === 0 && <SpendingBreakdown data={data} />}
-            {step === 1 && <CardRecommendations categories={data.categories} />}
-            {step === 2 && hasDebt && debtData && <DebtAlert data={debtData} />}
-            {step === 3 && hasDebt && (
-              <LoanForm defaultAmount={data.outstandingBalance} />
-            )}
-            {step === 2 && !hasDebt && (
-              <div className="text-center py-16">
-                <p className="text-[#525252]">
-                  No outstanding balance detected. You are in great shape!
-                </p>
-              </div>
-            )}
-          </motion.div>
-        </AnimatePresence>
+        {/* Parse warning banner */}
+        {(parseWarning || parseSource === "fallback" || parseSource === "demo") && (
+          <div className="mb-6 p-4 rounded-xl bg-[#fffbeb] border border-[#fde68a] flex items-start gap-3">
+            <AlertTriangle className="w-5 h-5 text-[#d97706] shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-medium text-[#92400e]">
+                {parseSource === "demo"
+                  ? "You\u2019re viewing sample data"
+                  : "We couldn\u2019t fully parse your statement"}
+              </p>
+              <p className="text-xs text-[#a16207] mt-1">
+                {parseWarning ||
+                  (parseSource === "demo"
+                    ? "This is a demo analysis with sample spending data. Upload your own statement to see your real breakdown."
+                    : "The data below may not reflect your actual spending. Try uploading a different statement format.")}
+              </p>
+              <Link
+                href="/analyze"
+                className="inline-flex items-center gap-1 text-xs font-medium text-[#d97706] hover:text-[#92400e] mt-2 transition-colors"
+              >
+                <ArrowLeft className="w-3 h-3" />
+                Upload a different statement
+              </Link>
+            </div>
+          </div>
+        )}
+
+        <div key={step}>
+          {step === 0 && <SpendingBreakdown data={data} />}
+          {step === 1 && <CardRecommendations categories={data.categories} />}
+          {step === 2 && hasDebt && debtData && <DebtAlert data={debtData} />}
+          {step === 3 && hasDebt && (
+            <LoanForm defaultAmount={data.outstandingBalance} />
+          )}
+          {step === 2 && !hasDebt && (
+            <div className="text-center py-16">
+              <p className="text-[#525252]">
+                No outstanding balance detected. You are in great shape!
+              </p>
+            </div>
+          )}
+        </div>
 
         {/* Navigation */}
         <div className="flex justify-between mt-8">
@@ -124,6 +155,8 @@ export default function ResultsPage() {
           )}
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

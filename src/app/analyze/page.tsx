@@ -3,12 +3,19 @@
 import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Upload, FileText, Loader2, CheckCircle, ArrowLeft } from "lucide-react";
+import {
+  Upload,
+  FileText,
+  Loader2,
+  CheckCircle,
+  ArrowLeft,
+  AlertCircle,
+} from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { Footer } from "@/components/Footer";
 
-const supportedBanks = [
-  "Emirates NBD",
+const comingSoonBanks = [
   "ADCB",
   "FAB",
   "HSBC",
@@ -19,25 +26,33 @@ const supportedBanks = [
   "Standard Chartered",
 ];
 
-type UploadState = "idle" | "uploading" | "processing" | "done";
+type UploadState = "idle" | "uploading" | "processing" | "done" | "error";
 
 export default function AnalyzePage() {
   const router = useRouter();
   const [state, setState] = useState<UploadState>("idle");
   const [dragActive, setDragActive] = useState(false);
   const [fileName, setFileName] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = useCallback(
     async (file: File) => {
-      if (!file || !file.name.endsWith(".pdf")) return;
+      if (!file) return;
+      if (!file.name.toLowerCase().endsWith(".pdf")) {
+        setErrorMsg(
+          "Only PDF files are supported. Please upload a .pdf statement."
+        );
+        setState("error");
+        return;
+      }
       setFileName(file.name);
+      setErrorMsg("");
       setState("uploading");
 
       await new Promise((r) => setTimeout(r, 400));
       setState("processing");
 
-      // Send real file to PDFMux-powered API
       try {
         const formData = new FormData();
         formData.append("file", file);
@@ -49,7 +64,6 @@ export default function AnalyzePage() {
         const data = await res.json();
 
         if (data.success) {
-          // Store in sessionStorage for results page
           sessionStorage.setItem("statementData", JSON.stringify(data.data));
           if (data.warning) {
             sessionStorage.setItem("parseWarning", data.warning);
@@ -58,9 +72,18 @@ export default function AnalyzePage() {
           setState("done");
           await new Promise((r) => setTimeout(r, 600));
           router.push("/results");
+        } else {
+          setErrorMsg(
+            data.error ||
+              "Could not parse your statement. Please try a different file."
+          );
+          setState("error");
         }
       } catch {
-        setState("idle");
+        setErrorMsg(
+          "Something went wrong. Please try again or use sample data."
+        );
+        setState("error");
       }
     },
     [router]
@@ -82,7 +105,6 @@ export default function AnalyzePage() {
     if (e.type === "dragleave") setDragActive(false);
   }, []);
 
-  // For demo: clicking the zone triggers upload with mock PDF
   const handleDemoUpload = useCallback(() => {
     const mockFile = new File(["demo"], "statement-feb-2026.pdf", {
       type: "application/pdf",
@@ -90,9 +112,15 @@ export default function AnalyzePage() {
     handleFile(mockFile);
   }, [handleFile]);
 
+  const resetToIdle = () => {
+    setState("idle");
+    setErrorMsg("");
+    setFileName("");
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-[#fafafa]">
-      <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto w-full border-b border-gray-100">
+      <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto w-full border-b border-[#e5e5e5]">
         <Logo />
         <Link
           href="/"
@@ -133,15 +161,36 @@ export default function AnalyzePage() {
             className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all cursor-pointer ${
               dragActive
                 ? "border-[#059669] bg-[#ecfdf5]"
+                : state === "error"
+                ? "border-[#fca5a5] bg-[#fef2f2]"
                 : state === "idle"
                 ? "border-[#d4d4d4] hover:border-[#a3a3a3] bg-white"
                 : "border-[#d4d4d4] bg-white"
             } shadow-sm`}
+            role="button"
+            tabIndex={0}
             onDrop={handleDrop}
             onDragEnter={handleDrag}
             onDragOver={handleDrag}
             onDragLeave={handleDrag}
-            onClick={state === "idle" ? () => fileInputRef.current?.click() : undefined}
+            onClick={
+              state === "idle" || state === "error"
+                ? () => {
+                    if (state === "error") resetToIdle();
+                    fileInputRef.current?.click();
+                  }
+                : undefined
+            }
+            onKeyDown={(e) => {
+              if (
+                (e.key === "Enter" || e.key === " ") &&
+                (state === "idle" || state === "error")
+              ) {
+                e.preventDefault();
+                if (state === "error") resetToIdle();
+                fileInputRef.current?.click();
+              }
+            }}
           >
             <AnimatePresence mode="wait">
               {state === "idle" && (
@@ -160,6 +209,27 @@ export default function AnalyzePage() {
                   </p>
                   <p className="text-xs text-[#a3a3a3]">
                     or click to browse your files
+                  </p>
+                </motion.div>
+              )}
+
+              {state === "error" && (
+                <motion.div
+                  key="error"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex flex-col items-center"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-[#fef2f2] flex items-center justify-center mb-4">
+                    <AlertCircle className="w-6 h-6 text-[#dc2626]" />
+                  </div>
+                  <p className="text-sm text-[#dc2626] font-medium mb-1">
+                    Upload failed
+                  </p>
+                  <p className="text-xs text-[#737373] max-w-xs">{errorMsg}</p>
+                  <p className="text-xs text-[#a3a3a3] mt-2">
+                    Click to try again
                   </p>
                 </motion.div>
               )}
@@ -219,12 +289,13 @@ export default function AnalyzePage() {
           </div>
 
           {/* Demo mode button */}
-          {state === "idle" && (
+          {(state === "idle" || state === "error") && (
             <button
               onClick={handleDemoUpload}
               className="mt-4 w-full text-center text-xs text-[#a3a3a3] hover:text-[#059669] transition-colors py-2"
             >
-              No PDF handy? <span className="underline">Try with sample data →</span>
+              No PDF handy?{" "}
+              <span className="underline">Try with sample data →</span>
             </button>
           )}
 
@@ -232,18 +303,24 @@ export default function AnalyzePage() {
           <div className="mt-6 text-center">
             <p className="text-xs text-[#a3a3a3] mb-3">Supported banks</p>
             <div className="flex flex-wrap justify-center gap-2">
-              {supportedBanks.map((bank) => (
+              <span className="px-3 py-1 text-xs rounded-full bg-[#ecfdf5] border border-[#a7f3d0] text-[#059669] font-medium">
+                Emirates NBD
+              </span>
+              {comingSoonBanks.map((bank) => (
                 <span
                   key={bank}
-                  className="px-3 py-1 text-xs rounded-full bg-[#f5f5f4] border border-[#e5e5e5] text-[#737373]"
+                  className="px-3 py-1 text-xs rounded-full bg-[#f5f5f4] border border-[#e5e5e5] text-[#a3a3a3]"
                 >
                   {bank}
+                  <span className="ml-1 text-[10px]">soon</span>
                 </span>
               ))}
             </div>
           </div>
         </motion.div>
       </main>
+
+      <Footer />
     </div>
   );
 }

@@ -12,6 +12,10 @@ type CategoryKey =
   | "shopping"
   | "transport"
   | "subscriptions"
+  | "entertainment"
+  | "travel"
+  | "health"
+  | "utilities"
   | "other";
 
 function categoryNameToKey(name: string): CategoryKey {
@@ -21,41 +25,62 @@ function categoryNameToKey(name: string): CategoryKey {
     Shopping: "shopping",
     Transport: "transport",
     Subscriptions: "subscriptions",
+    Entertainment: "entertainment",
+    Travel: "travel",
+    Health: "health",
+    Utilities: "utilities",
+    "Home & Services": "other",
+    "Kids & Family": "other",
     Other: "other",
   };
   return map[name] || "other";
 }
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const categories: SpendingCategory[] = body.categories || [];
-  const currentCardId: string = body.currentCardId || "";
+  try {
+    const body = await request.json();
+    const categories: SpendingCategory[] = body.categories || [];
+    const currentCardId: string = body.currentCardId || "";
 
-  // Calculate annual rewards for each card based on spending
-  const scored = cards
-    .filter((card) => card.id !== currentCardId)
-    .map((card) => {
-      let annualRewards = 0;
-      for (const cat of categories) {
-        const key = categoryNameToKey(cat.name);
-        const rate = card.rewardRates[key] || 0;
-        // Monthly spend * 12 * reward rate / 100
-        annualRewards += cat.amount * 12 * (rate / 100);
-      }
+    const scored = (cards as Record<string, unknown>[])
+      .filter((card: Record<string, unknown>) => card.id !== currentCardId)
+      .map((card: Record<string, unknown>) => {
+        let annualRewards = 0;
+        const rewardRates = card.rewardRates as Record<string, number>;
+        const cashbackCap = (card.cashbackCap as number) || 0;
 
-      const netAnnualBenefit = annualRewards - card.annualFee;
+        for (const cat of categories) {
+          const key = categoryNameToKey(cat.name);
+          const rate = rewardRates[key] || rewardRates["other"] || 0;
+          annualRewards += cat.amount * 12 * (rate / 100);
+        }
 
-      return {
-        ...card,
-        annualRewards: Math.round(annualRewards),
-        netAnnualBenefit: Math.round(netAnnualBenefit),
-      };
-    })
-    .sort((a, b) => b.netAnnualBenefit - a.netAnnualBenefit)
-    .slice(0, 3);
+        // Apply cashback cap if the card has one
+        if (cashbackCap > 0) {
+          const annualCap = cashbackCap * 12;
+          annualRewards = Math.min(annualRewards, annualCap);
+        }
 
-  return NextResponse.json({
-    success: true,
-    recommendations: scored,
-  });
+        const annualFee = (card.annualFee as number) || 0;
+        const netAnnualBenefit = annualRewards - annualFee;
+
+        return {
+          ...card,
+          annualRewards: Math.round(annualRewards),
+          netAnnualBenefit: Math.round(netAnnualBenefit),
+        };
+      })
+      .sort((a, b) => b.netAnnualBenefit - a.netAnnualBenefit)
+      .slice(0, 3);
+
+    return NextResponse.json({
+      success: true,
+      recommendations: scored,
+    });
+  } catch {
+    return NextResponse.json(
+      { success: false, error: "Invalid request.", recommendations: [] },
+      { status: 400 }
+    );
+  }
 }

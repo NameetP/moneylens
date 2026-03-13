@@ -29,6 +29,8 @@ export function CardRecommendations({ categories }: Props) {
   const [cards, setCards] = useState<CardRec[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [error, setError] = useState(false);
+
   useEffect(() => {
     fetch("/api/recommend-cards", {
       method: "POST",
@@ -37,7 +39,11 @@ export function CardRecommendations({ categories }: Props) {
     })
       .then((r) => r.json())
       .then((r) => {
-        setCards(r.recommendations);
+        setCards(r.recommendations || []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
         setLoading(false);
       });
   }, [categories]);
@@ -46,6 +52,16 @@ export function CardRecommendations({ categories }: Props) {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="w-6 h-6 border-2 border-[#e5e5e5] border-t-[#059669] rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (error || cards.length === 0) {
+    return (
+      <div className="text-center py-16">
+        <CreditCard className="w-10 h-10 text-[#a3a3a3] mx-auto mb-4" />
+        <p className="text-[#525252] font-medium">Could not load card recommendations</p>
+        <p className="text-sm text-[#a3a3a3] mt-1">Please try refreshing the page.</p>
       </div>
     );
   }
@@ -119,6 +135,8 @@ export function CardRecommendations({ categories }: Props) {
                   </div>
                   <a
                     href={card.applyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center gap-1 px-4 py-1.5 text-xs font-medium rounded-lg bg-[#059669] text-white hover:bg-[#047857] transition-colors shadow-sm"
                   >
                     Apply
@@ -130,6 +148,12 @@ export function CardRecommendations({ categories }: Props) {
           </motion.div>
         ))}
       </div>
+
+      {/* Affiliate disclosure */}
+      <p className="text-[10px] text-[#a3a3a3] mt-6 text-center leading-relaxed">
+        We may earn a commission if you apply through our links, at no extra cost to you.
+        This does not affect our recommendations — cards are ranked solely by your spending match.
+      </p>
     </div>
   );
 }
