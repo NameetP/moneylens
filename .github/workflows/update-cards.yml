@@ -1,0 +1,53 @@
+name: Weekly Card Database Update
+
+on:
+  schedule:
+    # Every Monday at 6am UTC
+    - cron: '0 6 * * 1'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  update-cards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          npx playwright install chromium --with-deps
+
+      - name: Scrape card data
+        run: npx tsx scripts/update-cards/scrape-cards.ts
+
+      - name: Normalize with Haiku
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: npx tsx scripts/update-cards/normalize-cards.ts
+
+      - name: Merge into database
+        run: npx tsx scripts/update-cards/merge-cards.ts
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet src/data/uae-cards.json; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "MoneyLens Bot"
+          git config user.email "bot@moneylens.app"
+          git add src/data/uae-cards.json
+          git commit -m "chore: weekly card database update $(date +%Y-%m-%d)"
+          git push

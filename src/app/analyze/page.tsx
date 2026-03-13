@@ -20,7 +20,8 @@ import { Logo } from "@/components/Logo";
 import { TrustBadge } from "@/components/TrustBadge";
 import { Footer } from "@/components/Footer";
 
-const comingSoonBanks = [
+const supportedBanks = [
+  "Emirates NBD",
   "ADCB",
   "FAB",
   "HSBC",
@@ -29,6 +30,7 @@ const comingSoonBanks = [
   "RAK Bank",
   "CBD",
   "Standard Chartered",
+  "Citibank",
 ];
 
 type UploadState = "idle" | "uploading" | "processing" | "done" | "error";
@@ -381,18 +383,14 @@ export default function AnalyzePage() {
 
           {/* Supported Banks */}
           <div className="mt-8 text-center">
-            <p className="text-xs text-[#A8A29E] mb-3 font-medium">Supported banks</p>
+            <p className="text-xs text-[#A8A29E] mb-3 font-medium">Supports all major UAE banks</p>
             <div className="flex flex-wrap justify-center gap-2">
-              <span className="px-3 py-1.5 text-xs rounded-full bg-[#F0FDFA] border border-[#CCFBF1] text-[#0F766E] font-semibold">
-                ✅ Emirates NBD
-              </span>
-              {comingSoonBanks.map((bank) => (
+              {supportedBanks.map((bank) => (
                 <span
                   key={bank}
-                  className="px-3 py-1.5 text-xs rounded-full bg-white border border-[#E7E5E4] text-[#A8A29E]"
+                  className="px-3 py-1.5 text-xs rounded-full bg-[#F0FDFA] border border-[#CCFBF1] text-[#0F766E] font-semibold"
                 >
-                  {bank}
-                  <span className="ml-1 text-[10px]">soon</span>
+                  ✅ {bank}
                 </span>
               ))}
             </div>

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { mockStatementData } from "@/data/mock-statement";
-import { parseStatement } from "@/lib/pdfmux";
+import { orchestrateParse } from "@/lib/parsers";
 
 export async function POST(request: NextRequest) {
   try {
@@ -34,30 +34,28 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    // Real PDF → parse with pdf-parse + regex extraction
+    // Parse with orchestrator (regex → PDFMux → LLM → fallback)
     const buffer = Buffer.from(await file.arrayBuffer());
+    const result = await orchestrateParse(buffer);
 
-    const parsed = await parseStatement(buffer);
-
-    // Validate that we got meaningful data
-    if (parsed.transactions.length === 0 && parsed.totalSpend === 0) {
+    if (result.data && result.data.transactions.length > 0) {
       return NextResponse.json({
         success: true,
-        source: "fallback",
-        warning: "Could not extract transactions from your statement. The format may not be supported yet. Showing sample data instead.",
-        data: mockStatementData,
+        source: result.source,
+        data: result.data,
       });
     }
 
+    // All parsers failed — return mock with warning
     return NextResponse.json({
       success: true,
-      source: "parsed",
-      data: parsed,
+      source: "fallback",
+      warning: `Could not extract transactions from your ${result.bankName} statement. Showing sample data instead. We're working on improving support for all banks.`,
+      data: mockStatementData,
     });
   } catch (error) {
     console.error("Statement parse error:", error);
 
-    // Graceful fallback: return mock with a warning
     return NextResponse.json({
       success: true,
       source: "fallback",
