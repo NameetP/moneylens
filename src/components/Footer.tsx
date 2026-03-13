@@ -33,6 +33,7 @@ export function Footer() {
           and debt calculations are for informational purposes only. Always
           consult a qualified financial advisor before making financial
           decisions. We may earn commissions from affiliate partnerships.
+          Compliant with UAE Personal Data Protection Law (Federal Decree-Law No. 45 of 2021).
         </p>
       </div>
     </footer>

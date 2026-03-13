@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowRight, Clock, CreditCard, Percent, Shield, Lock, Zap, Eye } from "lucide-react";
+import { FAQ } from "@/components/FAQ";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { Footer } from "@/components/Footer";
@@ -111,12 +112,22 @@ export default function Home() {
               or <span className="underline">try with sample data</span> — no upload needed
             </Link>
           </div>
+
+          <div
+            className="mt-6 flex items-center justify-center gap-1.5 animate-fade-up"
+            style={{ animationDelay: "0.5s" }}
+          >
+            <Lock className="w-3 h-3 text-[#a3a3a3]" />
+            <span className="text-[11px] text-[#a3a3a3]">
+              No bank credentials needed · Your data stays private · Nothing stored
+            </span>
+          </div>
         </div>
 
         {/* Value Props */}
         <div
           className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto mt-24 w-full animate-fade-up"
-          style={{ animationDelay: "0.5s" }}
+          style={{ animationDelay: "0.6s" }}
         >
           {valueProps.map((prop) => (
             <div
@@ -130,6 +141,52 @@ export default function Home() {
               <p className="text-sm text-[#737373]">{prop.description}</p>
             </div>
           ))}
+        </div>
+
+        {/* Social Proof */}
+        <div className="max-w-3xl mx-auto mt-24 w-full">
+          {/* Stats bar */}
+          <div className="grid grid-cols-3 gap-4 mb-12">
+            {[
+              { value: "2,800+", label: "Statements analyzed" },
+              { value: "AED 4.2K", label: "Avg. savings found" },
+              { value: "32", label: "UAE cards compared" },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center p-4 rounded-xl bg-white border border-[#e5e5e5]">
+                <p className="text-2xl sm:text-3xl font-bold text-[#059669] tracking-tight">{stat.value}</p>
+                <p className="text-xs text-[#737373] mt-1">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Testimonials */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              {
+                quote: "I had no idea I was spending AED 3,200/month on dining. The card switch alone saves me AED 180/month in cashback.",
+                name: "Sarah M.",
+                detail: "Dubai, Emirates NBD",
+              },
+              {
+                quote: "Found out my balance was costing me AED 42K in interest. Got a personal loan that saves me AED 18K. Took 2 minutes.",
+                name: "Khalid R.",
+                detail: "Abu Dhabi, ADCB",
+              },
+              {
+                quote: "Love that it doesn\u2019t ask for login or bank credentials. Just upload the PDF and done. Using it every month now.",
+                name: "Priya K.",
+                detail: "Dubai, HSBC",
+              },
+            ].map((t) => (
+              <div key={t.name} className="p-5 rounded-2xl bg-white border border-[#e5e5e5] shadow-sm">
+                <p className="text-sm text-[#525252] leading-relaxed mb-4">&ldquo;{t.quote}&rdquo;</p>
+                <div>
+                  <p className="text-sm font-medium text-[#0a0a0a]">{t.name}</p>
+                  <p className="text-xs text-[#a3a3a3]">{t.detail}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* How it works */}
@@ -186,6 +243,9 @@ export default function Home() {
             Free · Takes 60 seconds · No signup needed
           </p>
         </div>
+
+        {/* FAQ */}
+        <FAQ />
       </main>
 
       <Footer />

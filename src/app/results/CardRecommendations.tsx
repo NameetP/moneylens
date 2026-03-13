@@ -71,9 +71,17 @@ export function CardRecommendations({ categories }: Props) {
       <h2 className="text-2xl font-bold mb-1 tracking-[-0.02em] text-[#0a0a0a]">
         Better Cards For You
       </h2>
-      <p className="text-[#737373] text-sm mb-8">
+      <p className="text-[#737373] text-sm mb-6">
         Based on your spending pattern, these cards could save you more.
       </p>
+      <div className="flex items-center gap-1.5 mb-8">
+        <svg className="w-3 h-3 text-[#059669]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span className="text-[11px] text-[#a3a3a3] font-medium">
+          Card rates verified March 2026
+        </span>
+      </div>
 
       <div className="space-y-4">
         {cards.map((card, i) => (

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { TrustBadge } from "@/components/TrustBadge";
 import { Footer } from "@/components/Footer";
 import { Stepper } from "@/components/Stepper";
 import type { StatementData } from "@/data/mock-statement";
@@ -13,13 +14,20 @@ import { SpendingBreakdown } from "./SpendingBreakdown";
 import { CardRecommendations } from "./CardRecommendations";
 import { DebtAlert } from "./DebtAlert";
 import { LoanForm } from "./LoanForm";
+import { EmailCapture } from "./EmailCapture";
 
-const STEPS = ["Spending", "Cards", "Debt", "Save"];
+const STEPS = ["Spending", "Cards", "Balance", "Loan"];
 
 export default function ResultsPage() {
   const router = useRouter();
   const [data, setData] = useState<StatementData | null>(null);
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = sessionStorage.getItem("resultsStep");
+      return saved ? Math.min(Number(saved), 3) : 0;
+    }
+    return 0;
+  });
   const [debtData, setDebtData] = useState<Record<string, unknown> | null>(null);
   const [parseWarning, setParseWarning] = useState<string | null>(null);
   const [parseSource, setParseSource] = useState<string>("unknown");
@@ -41,6 +49,10 @@ export default function ResultsPage() {
     if (warning) setParseWarning(warning);
     if (source) setParseSource(source);
   }, [router]);
+
+  useEffect(() => {
+    sessionStorage.setItem("resultsStep", String(step));
+  }, [step]);
 
   useEffect(() => {
     if (data && data.outstandingBalance > 0) {
@@ -71,13 +83,16 @@ export default function ResultsPage() {
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-[#fafafa]">
       <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto w-full border-b border-[#e5e5e5]">
         <Logo />
-        <Link
-          href="/analyze"
-          className="flex items-center gap-1 text-sm text-[#525252] hover:text-[#0a0a0a] transition-colors font-medium"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          New Analysis
-        </Link>
+        <div className="flex items-center gap-4">
+          <TrustBadge />
+          <Link
+            href="/analyze"
+            className="flex items-center gap-1 text-sm text-[#525252] hover:text-[#0a0a0a] transition-colors font-medium"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            New Analysis
+          </Link>
+        </div>
       </nav>
 
       <main className="flex-1 px-6 pb-24 max-w-4xl mx-auto w-full">
@@ -119,7 +134,17 @@ export default function ResultsPage() {
         )}
 
         <div key={step}>
-          {step === 0 && <SpendingBreakdown data={data} />}
+          {step === 0 && (
+            <>
+              <SpendingBreakdown data={data} />
+              <div className="mt-8">
+                <EmailCapture
+                  totalSpend={data.totalSpend}
+                  topCategory={data.categories[0]?.name || "Spending"}
+                />
+              </div>
+            </>
+          )}
           {step === 1 && <CardRecommendations categories={data.categories} />}
           {step === 2 && hasDebt && debtData && <DebtAlert data={debtData} />}
           {step === 3 && hasDebt && (

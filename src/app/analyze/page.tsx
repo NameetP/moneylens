@@ -10,9 +10,14 @@ import {
   CheckCircle,
   ArrowLeft,
   AlertCircle,
+  Lock,
+  Eye,
+  Trash2,
+  Shield,
 } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { TrustBadge } from "@/components/TrustBadge";
 import { Footer } from "@/components/Footer";
 
 const comingSoonBanks = [
@@ -28,12 +33,20 @@ const comingSoonBanks = [
 
 type UploadState = "idle" | "uploading" | "processing" | "done" | "error";
 
+const processingSteps = [
+  { label: "Reading PDF..." },
+  { label: "Extracting transactions..." },
+  { label: "Categorizing spending..." },
+  { label: "Matching cards..." },
+];
+
 export default function AnalyzePage() {
   const router = useRouter();
   const [state, setState] = useState<UploadState>("idle");
   const [dragActive, setDragActive] = useState(false);
   const [fileName, setFileName] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [processingStep, setProcessingStep] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = useCallback(
@@ -52,6 +65,16 @@ export default function AnalyzePage() {
 
       await new Promise((r) => setTimeout(r, 400));
       setState("processing");
+      setProcessingStep(0);
+
+      // Animate through processing steps
+      const stepInterval = setInterval(() => {
+        setProcessingStep((s) => {
+          if (s < processingSteps.length - 1) return s + 1;
+          clearInterval(stepInterval);
+          return s;
+        });
+      }, 800);
 
       try {
         const formData = new FormData();
@@ -62,6 +85,8 @@ export default function AnalyzePage() {
           body: formData,
         });
         const data = await res.json();
+
+        clearInterval(stepInterval);
 
         if (data.success) {
           sessionStorage.setItem("statementData", JSON.stringify(data.data));
@@ -80,6 +105,7 @@ export default function AnalyzePage() {
           setState("error");
         }
       } catch {
+        clearInterval(stepInterval);
         setErrorMsg(
           "Something went wrong. Please try again or use sample data."
         );
@@ -116,19 +142,23 @@ export default function AnalyzePage() {
     setState("idle");
     setErrorMsg("");
     setFileName("");
+    setProcessingStep(0);
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-[#fafafa]">
       <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto w-full border-b border-[#e5e5e5]">
         <Logo />
-        <Link
-          href="/"
-          className="flex items-center gap-1 text-sm text-[#525252] hover:text-[#0a0a0a] transition-colors font-medium"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back
-        </Link>
+        <div className="flex items-center gap-4">
+          <TrustBadge />
+          <Link
+            href="/"
+            className="flex items-center gap-1 text-sm text-[#525252] hover:text-[#0a0a0a] transition-colors font-medium"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back
+          </Link>
+        </div>
       </nav>
 
       <main className="flex-1 flex flex-col items-center justify-center px-6 pb-24">
@@ -205,10 +235,12 @@ export default function AnalyzePage() {
                     <Upload className="w-6 h-6 text-[#737373]" />
                   </div>
                   <p className="text-sm text-[#525252] mb-1">
-                    Drag & drop your PDF statement here
+                    <span className="hidden sm:inline">Drag & drop your PDF statement here</span>
+                    <span className="sm:hidden">Tap to upload your PDF statement</span>
                   </p>
                   <p className="text-xs text-[#a3a3a3]">
-                    or click to browse your files
+                    <span className="hidden sm:inline">or click to browse your files</span>
+                    <span className="sm:hidden">Select from your files or downloads</span>
                   </p>
                 </motion.div>
               )}
@@ -244,7 +276,7 @@ export default function AnalyzePage() {
                 >
                   <FileText className="w-8 h-8 text-[#525252] mb-3" />
                   <p className="text-sm text-[#0a0a0a] mb-1">{fileName}</p>
-                  <p className="text-xs text-[#737373]">Uploading...</p>
+                  <p className="text-xs text-[#737373]">Uploading securely...</p>
                   <div className="w-48 h-1 bg-[#e5e5e5] rounded-full mt-4 overflow-hidden">
                     <motion.div
                       className="h-full bg-[#059669] rounded-full"
@@ -264,13 +296,30 @@ export default function AnalyzePage() {
                   exit={{ opacity: 0 }}
                   className="flex flex-col items-center"
                 >
-                  <Loader2 className="w-8 h-8 text-[#059669] animate-spin mb-3" />
-                  <p className="text-sm text-[#0a0a0a] mb-1">
-                    Analyzing your statement...
-                  </p>
-                  <p className="text-xs text-[#737373]">
-                    Categorizing transactions & matching cards
-                  </p>
+                  <Loader2 className="w-8 h-8 text-[#059669] animate-spin mb-4" />
+                  <div className="space-y-2 w-full max-w-xs">
+                    {processingSteps.map((step, i) => (
+                      <div
+                        key={step.label}
+                        className={`flex items-center gap-2 text-xs transition-all duration-300 ${
+                          i < processingStep
+                            ? "text-[#059669]"
+                            : i === processingStep
+                            ? "text-[#0a0a0a] font-medium"
+                            : "text-[#d4d4d4]"
+                        }`}
+                      >
+                        {i < processingStep ? (
+                          <CheckCircle className="w-3.5 h-3.5 shrink-0" />
+                        ) : i === processingStep ? (
+                          <div className="w-3.5 h-3.5 border-2 border-[#059669] border-t-transparent rounded-full animate-spin shrink-0" />
+                        ) : (
+                          <div className="w-3.5 h-3.5 rounded-full border border-[#e5e5e5] shrink-0" />
+                        )}
+                        {step.label}
+                      </div>
+                    ))}
+                  </div>
                 </motion.div>
               )}
 
@@ -299,8 +348,41 @@ export default function AnalyzePage() {
             </button>
           )}
 
+          {/* What we see — transparency */}
+          <div className="mt-8 p-4 rounded-xl bg-[#fafafa] border border-[#e5e5e5]">
+            <p className="text-xs font-medium text-[#525252] mb-3">What happens to your data</p>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="text-center">
+                <div className="w-8 h-8 rounded-lg bg-white border border-[#e5e5e5] flex items-center justify-center mx-auto mb-1.5">
+                  <Lock className="w-3.5 h-3.5 text-[#059669]" />
+                </div>
+                <p className="text-[10px] text-[#737373] leading-tight">Encrypted upload</p>
+              </div>
+              <div className="text-center">
+                <div className="w-8 h-8 rounded-lg bg-white border border-[#e5e5e5] flex items-center justify-center mx-auto mb-1.5">
+                  <Eye className="w-3.5 h-3.5 text-[#059669]" />
+                </div>
+                <p className="text-[10px] text-[#737373] leading-tight">We read amounts &amp; merchants only</p>
+              </div>
+              <div className="text-center">
+                <div className="w-8 h-8 rounded-lg bg-white border border-[#e5e5e5] flex items-center justify-center mx-auto mb-1.5">
+                  <Trash2 className="w-3.5 h-3.5 text-[#059669]" />
+                </div>
+                <p className="text-[10px] text-[#737373] leading-tight">Deleted after processing</p>
+              </div>
+            </div>
+          </div>
+
+          {/* What we DON'T see */}
+          <div className="mt-3 flex items-center gap-2 justify-center">
+            <Shield className="w-3 h-3 text-[#a3a3a3]" />
+            <p className="text-[10px] text-[#a3a3a3]">
+              We never see your card number, account number, or personal details
+            </p>
+          </div>
+
           {/* Supported Banks */}
-          <div className="mt-6 text-center">
+          <div className="mt-8 text-center">
             <p className="text-xs text-[#a3a3a3] mb-3">Supported banks</p>
             <div className="flex flex-wrap justify-center gap-2">
               <span className="px-3 py-1 text-xs rounded-full bg-[#ecfdf5] border border-[#a7f3d0] text-[#059669] font-medium">
