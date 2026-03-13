@@ -1,75 +1,177 @@
 @import "tailwindcss";
 
+/* ── Design Token System ─────────────────────────────────────────── */
+/* Derived from: CRED luxury + Chime green + Linear precision + Mercury transparency */
+
 :root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
+  /* ── Colors ─────────────────────────────────────────────────── */
+  /* Primary: Deep emerald → premium, trustworthy, financial */
+  --emerald-900: #064028;
+  --emerald-800: #0A6E3F;
+  --emerald-700: #0D8A4F;
+  --emerald-600: #10A760;
+  --emerald-500: #15C472;
+  --emerald-400: #2DD4A0;
+  --emerald-300: #6EE7B7;
+  --emerald-200: #A7F3D0;
+  --emerald-100: #D1FAE5;
+  --emerald-50: #ECFDF5;
+
+  /* Neutrals: Warm zinc — not cold gray */
+  --ink: #0F1419;
+  --ink-muted: #1A1F26;
+  --text-primary: #18181B;
+  --text-secondary: #52525B;
+  --text-tertiary: #71717A;
+  --text-quaternary: #A1A1AA;
+  --border: #E4E4E7;
+  --border-light: #F4F4F5;
+  --surface: #FAFAFA;
+  --surface-raised: #FFFFFF;
+
+  /* Semantic */
+  --success: #059669;
+  --warning: #D97706;
+  --danger: #DC2626;
+  --info: #2563EB;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-emerald: 0 4px 14px -2px rgba(10, 110, 63, 0.25);
+
+  /* Typography */
+  --font-display: var(--font-jakarta), system-ui, -apple-system, sans-serif;
+  --font-body: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), "SF Mono", "Fira Code", monospace;
+
+  /* Spacing (4px base grid) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-savings: #059669;
-  --color-warning: #dc2626;
-  --color-muted: #525252;
-  --color-border: #e5e5e5;
-  --color-card: #ffffff;
-  --color-card-hover: #fafafa;
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--surface);
+  --color-foreground: var(--text-primary);
+  --color-savings: var(--emerald-800);
+  --color-warning: var(--danger);
+  --color-muted: var(--text-secondary);
+  --color-border: var(--border);
+  --color-card: var(--surface-raised);
+  --color-card-hover: var(--surface);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono);
 }
 
+/* ── Base ─────────────────────────────────────────────────────── */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #d4d4d4;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #a3a3a3;
+/* Tabular figures for all financial numbers */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
-/* Premium selection color */
+/* ── Scrollbar ────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-quaternary); }
+
+/* ── Selection ────────────────────────────────────────────────── */
 ::selection {
-  background: #059669;
-  color: white;
+  background: var(--emerald-400);
+  color: var(--emerald-900);
 }
 
-/* CSS animations — Framer Motion initial={{ opacity: 0 }} breaks in React 19 */
+/* ── Animations ───────────────────────────────────────────────── */
 @keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-fade-in {
-  animation: fade-in 0.5s ease-out both;
+@keyframes fade-up-slow {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-fade-up {
-  animation: fade-up 0.5s ease-out both;
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes counter-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gentle-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-in { animation: fade-in 0.5s ease-out both; }
+.animate-fade-up { animation: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-fade-up-slow { animation: fade-up-slow 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-slide-in-right { animation: slide-in-right 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-counter-up { animation: counter-up 0.4s ease-out both; }
+.animate-gentle-pulse { animation: gentle-pulse 2s ease-in-out infinite; }
+
+/* Shimmer loading state */
+.shimmer {
+  background: linear-gradient(90deg, var(--border-light) 25%, var(--border) 50%, var(--border-light) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ── Glass effect (for premium overlays) ──────────────────────── */
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ── Focus visible (accessibility) ────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--emerald-400);
+  outline-offset: 2px;
+}
+
+/* ── Smooth transitions for interactive elements ──────────────── */
+a, button {
+  transition: all 0.2s ease;
 }
