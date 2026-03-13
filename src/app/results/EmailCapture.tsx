@@ -34,7 +34,6 @@ export function EmailCapture({ totalSpend, topCategory }: Props) {
       });
       setSubmitted(true);
     } catch {
-      // Still show success — we don't want to block the flow
       setSubmitted(true);
     } finally {
       setSubmitting(false);
@@ -43,10 +42,10 @@ export function EmailCapture({ totalSpend, topCategory }: Props) {
 
   if (submitted) {
     return (
-      <div className="p-6 rounded-2xl bg-[#ecfdf5] border border-[#a7f3d0] text-center">
-        <CheckCircle className="w-8 h-8 text-[#059669] mx-auto mb-3" />
-        <p className="font-semibold text-[#065f46]">You&apos;re all set!</p>
-        <p className="text-sm text-[#047857] mt-1">
+      <div className="p-6 rounded-3xl bg-[#F0FDFA] border-2 border-[#CCFBF1] text-center">
+        <CheckCircle className="w-8 h-8 text-[#0F766E] mx-auto mb-3" />
+        <p className="font-semibold text-[#134E4A]">You&apos;re all set! ✨</p>
+        <p className="text-sm text-[#0F766E] mt-1">
           {monthlyReminder
             ? "We\u2019ll send you a monthly reminder to track your spending."
             : "We\u2019ll send your spending summary shortly."}
@@ -56,16 +55,14 @@ export function EmailCapture({ totalSpend, topCategory }: Props) {
   }
 
   return (
-    <div className="p-6 rounded-2xl bg-white border border-[#e5e5e5] shadow-sm">
+    <div className="p-6 rounded-3xl bg-white border-2 border-[#E7E5E4]" style={{ boxShadow: "var(--shadow-sm)" }}>
       <div className="flex items-start gap-3 mb-4">
-        <div className="w-10 h-10 rounded-xl bg-[#ecfdf5] flex items-center justify-center shrink-0">
-          <Mail className="w-5 h-5 text-[#059669]" />
-        </div>
+        <div className="text-2xl">📧</div>
         <div>
-          <h3 className="font-semibold text-[#0a0a0a]">
+          <h3 className="font-semibold text-[#1C1917]">
             Get your spending summary
           </h3>
-          <p className="text-sm text-[#737373] mt-0.5">
+          <p className="text-sm text-[#78716C] mt-0.5">
             We&apos;ll email you a clean breakdown you can reference anytime.
           </p>
         </div>
@@ -79,12 +76,13 @@ export function EmailCapture({ totalSpend, topCategory }: Props) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="your@email.com"
-            className="flex-1 px-4 py-2.5 bg-white border border-[#e5e5e5] rounded-xl text-sm text-[#0a0a0a] placeholder:text-[#a3a3a3] focus:outline-none focus:ring-2 focus:ring-[#059669]/20 focus:border-[#059669] transition-all"
+            className="flex-1 px-4 py-2.5 bg-white border-2 border-[#E7E5E4] rounded-2xl text-sm text-[#1C1917] placeholder:text-[#A8A29E] focus:outline-none focus:ring-2 focus:ring-[#C2410C]/10 focus:border-[#C2410C] transition-all"
           />
           <button
             type="submit"
             disabled={submitting}
-            className="flex items-center gap-1.5 px-5 py-2.5 bg-[#059669] hover:bg-[#047857] text-white text-sm font-medium rounded-xl transition-colors shadow-sm disabled:opacity-50"
+            className="flex items-center gap-1.5 px-5 py-2.5 bg-[#C2410C] hover:bg-[#9A3412] text-white text-sm font-medium rounded-full transition-colors disabled:opacity-50"
+            style={{ boxShadow: "var(--shadow-terra)" }}
           >
             {submitting ? (
               <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -102,16 +100,16 @@ export function EmailCapture({ totalSpend, topCategory }: Props) {
             type="checkbox"
             checked={monthlyReminder}
             onChange={(e) => setMonthlyReminder(e.target.checked)}
-            className="w-3.5 h-3.5 rounded border-[#d4d4d4] text-[#059669] accent-[#059669]"
+            className="w-3.5 h-3.5 rounded border-[#D6D3D1] text-[#0F766E] accent-[#0F766E]"
           />
-          <span className="flex items-center gap-1.5 text-xs text-[#737373]">
+          <span className="flex items-center gap-1.5 text-xs text-[#78716C]">
             <Bell className="w-3 h-3" />
             Remind me to analyze next month&apos;s statement
           </span>
         </label>
       </form>
 
-      <p className="text-[10px] text-[#a3a3a3] mt-3">
+      <p className="text-[10px] text-[#A8A29E] mt-3">
         No spam. Unsubscribe anytime. We never share your email.
       </p>
     </div>

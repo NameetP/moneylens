@@ -79,16 +79,21 @@ export default function ResultsPage() {
   const prev = () => setStep((s) => Math.max(s - 1, 0));
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col" style={{ background: "#FAF7F2" }}>
+      {/* Decorative blobs */}
+      <svg className="fixed top-[-80px] right-[-60px] w-[300px] h-[300px] opacity-8 pointer-events-none" viewBox="0 0 500 500">
+        <path d="M426,295Q411,390,321,411Q231,432,157,389Q83,346,73,253Q63,160,140,104Q217,48,310,62Q403,76,423,188Q443,300,426,295Z" fill="#C2410C" />
+      </svg>
+
       {/* Nav */}
-      <nav className="sticky top-0 z-50 glass border-b border-[#E4E4E7]">
+      <nav className="sticky top-0 z-50 glass border-b border-[#E7E5E4]">
         <div className="flex items-center justify-between px-6 py-3.5 max-w-6xl mx-auto w-full">
           <Logo />
           <div className="flex items-center gap-4">
             <TrustBadge />
             <Link
               href="/analyze"
-              className="flex items-center gap-1.5 text-sm text-[#52525B] hover:text-[#18181B] transition-colors font-medium"
+              className="flex items-center gap-1.5 text-sm text-[#57534E] hover:text-[#1C1917] transition-colors font-medium"
             >
               <ArrowLeft className="w-4 h-4" />
               New Analysis
@@ -97,20 +102,20 @@ export default function ResultsPage() {
         </div>
       </nav>
 
-      <main className="flex-1 px-6 pb-24 max-w-4xl mx-auto w-full">
+      <main className="flex-1 px-6 pb-24 max-w-4xl mx-auto w-full relative z-10">
         {/* Statement header */}
         <div className="text-center mb-6 mt-6">
-          <p className="text-sm font-medium text-[#52525B]">
+          <p className="text-sm font-medium text-[#57534E]">
             {data.bankName} {data.cardType} ****{data.cardLast4}
           </p>
-          <p className="text-xs text-[#A1A1AA]">{data.statementPeriod}</p>
+          <p className="text-xs text-[#A8A29E]">{data.statementPeriod}</p>
         </div>
 
         <Stepper steps={visibleSteps} currentStep={step} />
 
         {/* Parse warning banner */}
         {(parseWarning || parseSource === "fallback" || parseSource === "demo") && (
-          <div className="mb-6 p-4 rounded-xl bg-[#FFFBEB] border border-[#FDE68A] flex items-start gap-3">
+          <div className="mb-6 p-4 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE68A] flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-[#D97706] shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-semibold text-[#92400E]">
@@ -154,7 +159,8 @@ export default function ResultsPage() {
           )}
           {step === 2 && !hasDebt && (
             <div className="text-center py-16">
-              <p className="text-[#52525B]">
+              <p className="text-3xl mb-2">🎉</p>
+              <p className="text-[#57534E]">
                 No outstanding balance detected. You&apos;re in great shape!
               </p>
             </div>
@@ -166,7 +172,7 @@ export default function ResultsPage() {
           <button
             onClick={prev}
             disabled={step === 0}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium bg-white border border-[#E4E4E7] text-[#52525B] hover:text-[#18181B] hover:border-[#D4D4D8] transition-colors disabled:opacity-30 disabled:pointer-events-none"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium bg-white border-2 border-[#E7E5E4] text-[#57534E] hover:text-[#1C1917] hover:border-[#D6D3D1] transition-colors disabled:opacity-30 disabled:pointer-events-none"
             style={{ boxShadow: "var(--shadow-xs)" }}
           >
             <ArrowLeft className="w-4 h-4" />
@@ -175,8 +181,8 @@ export default function ResultsPage() {
           {step < maxStep && (
             <button
               onClick={next}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-[#0A6E3F] text-white hover:bg-[#085C34] transition-colors"
-              style={{ boxShadow: "var(--shadow-emerald)" }}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold bg-[#C2410C] text-white hover:bg-[#9A3412] transition-colors"
+              style={{ boxShadow: "var(--shadow-terra)" }}
             >
               Next
               <ArrowRight className="w-4 h-4" />

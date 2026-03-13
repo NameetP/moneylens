@@ -41,27 +41,27 @@ export function FAQ() {
   return (
     <div className="w-full">
       <div className="text-center mb-10">
-        <p className="text-sm font-semibold text-[#0A6E3F] tracking-wide uppercase mb-3">FAQ</p>
+        <p className="text-sm font-semibold text-[#C2410C] tracking-wide uppercase mb-3">FAQ</p>
         <h2
-          className="text-2xl sm:text-3xl font-extrabold tracking-[-0.03em] text-[#18181B]"
+          className="text-2xl sm:text-3xl font-extrabold tracking-[-0.03em] text-[#1C1917]"
           style={{ fontFamily: "var(--font-jakarta)" }}
         >
           Common questions
         </h2>
       </div>
-      <div className="divide-y divide-[#E4E4E7] border-t border-b border-[#E4E4E7]">
+      <div className="divide-y divide-[#E7E5E4] border-t border-b border-[#E7E5E4]">
         {faqs.map((faq, i) => (
           <div key={i}>
             <button
               onClick={() => toggle(i)}
               className="w-full py-5 flex items-center justify-between text-left cursor-pointer group"
             >
-              <span className="text-[15px] font-semibold text-[#18181B] pr-4 group-hover:text-[#0A6E3F] transition-colors">
+              <span className="text-[15px] font-semibold text-[#1C1917] pr-4 group-hover:text-[#C2410C] transition-colors">
                 {faq.question}
               </span>
               <ChevronDown
-                className={`w-4 h-4 text-[#A1A1AA] shrink-0 transition-transform duration-200 ${
-                  openIndex === i ? "rotate-180 text-[#0A6E3F]" : ""
+                className={`w-4 h-4 text-[#A8A29E] shrink-0 transition-transform duration-200 ${
+                  openIndex === i ? "rotate-180 text-[#C2410C]" : ""
                 }`}
               />
             </button>
@@ -70,7 +70,7 @@ export function FAQ() {
                 openIndex === i ? "max-h-48 pb-5" : "max-h-0"
               }`}
             >
-              <p className="text-sm text-[#71717A] leading-relaxed">
+              <p className="text-sm text-[#78716C] leading-relaxed">
                 {faq.answer}
               </p>
             </div>

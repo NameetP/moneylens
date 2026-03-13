@@ -21,12 +21,12 @@ export function Stepper({ steps, currentStep }: StepperProps) {
               <motion.div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
                   isCompleted
-                    ? "bg-[#0A6E3F] text-white"
+                    ? "bg-[#0F766E] text-white"
                     : isActive
-                    ? "bg-white text-[#0A6E3F] border-2 border-[#0A6E3F]"
-                    : "bg-[#FAFAFA] text-[#A1A1AA] border border-[#E4E4E7]"
+                    ? "bg-white text-[#C2410C] border-2 border-[#C2410C]"
+                    : "bg-[#F5F5F4] text-[#A8A29E] border border-[#E7E5E4]"
                 }`}
-                style={{ boxShadow: isActive ? "0 0 0 4px rgba(10, 110, 63, 0.1)" : "none" }}
+                style={{ boxShadow: isActive ? "0 0 0 4px rgba(194, 65, 12, 0.1)" : "none" }}
                 initial={false}
                 animate={{
                   scale: isActive ? 1.1 : 1,
@@ -38,10 +38,10 @@ export function Stepper({ steps, currentStep }: StepperProps) {
               <span
                 className={`text-sm hidden sm:inline ${
                   isActive
-                    ? "text-[#18181B] font-semibold"
+                    ? "text-[#1C1917] font-semibold"
                     : isCompleted
-                    ? "text-[#52525B] font-medium"
-                    : "text-[#A1A1AA]"
+                    ? "text-[#57534E] font-medium"
+                    : "text-[#A8A29E]"
                 }`}
               >
                 {step}
@@ -50,7 +50,7 @@ export function Stepper({ steps, currentStep }: StepperProps) {
             {i < steps.length - 1 && (
               <div
                 className={`w-8 sm:w-12 h-px ${
-                  isCompleted ? "bg-[#0A6E3F]" : "bg-[#E4E4E7]"
+                  isCompleted ? "bg-[#0F766E]" : "bg-[#E7E5E4]"
                 }`}
               />
             )}
