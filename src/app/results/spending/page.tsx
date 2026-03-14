@@ -141,7 +141,11 @@ export default function SpendingPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <CardRecommendations categories={data.categories} />
+          <CardRecommendations
+            categories={data.categories}
+            bankName={data.bankName}
+            cardType={data.cardType}
+          />
         </motion.section>
 
         {/* ── Section 4: Email Capture ────────────────────── */}
