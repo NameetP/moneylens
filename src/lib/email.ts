@@ -7,7 +7,8 @@
  */
 
 const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
-const FROM_EMAIL = "summary@moneylens.app";
+// TODO: switch to summary@moneylens.app once SPF/DKIM records are verified
+const FROM_EMAIL = "coldbrew856@gmail.com";
 const FROM_NAME = "MoneyLens";
 
 interface CategoryData {
