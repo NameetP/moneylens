@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { sendSpendingSummary } from "@/lib/email";
 
 const DATA_DIR = ".data";
 const EMAILS_FILE = `${DATA_DIR}/emails.json`;
@@ -18,6 +19,7 @@ interface EmailEntry {
   context: Record<string, unknown>;
   capturedAt: string;
   source: string;
+  emailSent?: boolean;
 }
 
 function persistEmail(entry: EmailEntry) {
@@ -63,9 +65,38 @@ export async function POST(request: NextRequest) {
       source: "post-analysis",
     };
 
+    // Always persist the email first
     persistEmail(entry);
 
-    return NextResponse.json({ success: true });
+    // Send the actual spending summary email
+    const categories = body.categories || [];
+    const totalSpend = body.totalSpend || body.context?.totalSpend || 0;
+
+    if (categories.length > 0) {
+      const emailResult = await sendSpendingSummary({
+        email,
+        totalSpend,
+        categories,
+        bankName: body.bankName,
+        cardType: body.cardType,
+        statementPeriod: body.statementPeriod,
+      });
+
+      if (emailResult.success) {
+        // Update the persisted entry to track that email was sent
+        persistEmail({ ...entry, emailSent: true });
+      } else {
+        console.warn(`Email send failed for ${email}: ${emailResult.error}`);
+        // Don't fail the request — email is captured for retry
+      }
+
+      return NextResponse.json({
+        success: true,
+        emailSent: emailResult.success,
+      });
+    }
+
+    return NextResponse.json({ success: true, emailSent: false });
   } catch {
     return NextResponse.json(
       { success: false, error: "Invalid request." },

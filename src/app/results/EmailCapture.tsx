@@ -1,40 +1,71 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, CheckCircle, ArrowRight, Bell } from "lucide-react";
+import { CheckCircle, ArrowRight, Bell } from "lucide-react";
+
+interface CategoryData {
+  name: string;
+  amount: number;
+  percentage: number;
+  color: string;
+}
 
 interface Props {
   totalSpend: number;
   topCategory: string;
+  categories: CategoryData[];
+  bankName?: string;
+  cardType?: string;
+  statementPeriod?: string;
 }
 
-export function EmailCapture({ totalSpend, topCategory }: Props) {
+export function EmailCapture({
+  totalSpend,
+  topCategory,
+  categories,
+  bankName,
+  cardType,
+  statementPeriod,
+}: Props) {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [monthlyReminder, setMonthlyReminder] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || submitting) return;
     setSubmitting(true);
+    setError(null);
 
     try {
-      await fetch("/api/capture-email", {
+      const res = await fetch("/api/capture-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
           monthlyReminder,
+          totalSpend: Math.round(totalSpend),
+          categories,
+          bankName,
+          cardType,
+          statementPeriod,
           context: {
             totalSpend: Math.round(totalSpend),
             topCategory,
           },
         }),
       });
-      setSubmitted(true);
+
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Something went wrong. Please try again.");
+      } else {
+        setSubmitted(true);
+      }
     } catch {
-      setSubmitted(true);
+      setError("Network error. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -44,18 +75,21 @@ export function EmailCapture({ totalSpend, topCategory }: Props) {
     return (
       <div className="p-6 rounded-3xl bg-[#F0FDFA] border-2 border-[#CCFBF1] text-center">
         <CheckCircle className="w-8 h-8 text-[#0F766E] mx-auto mb-3" />
-        <p className="font-semibold text-[#134E4A]">You&apos;re all set! ✨</p>
+        <p className="font-semibold text-[#134E4A]">Check your inbox! ✨</p>
         <p className="text-sm text-[#0F766E] mt-1">
           {monthlyReminder
-            ? "We\u2019ll send you a monthly reminder to track your spending."
-            : "We\u2019ll send your spending summary shortly."}
+            ? "Your spending summary is on its way. We\u2019ll also remind you next month."
+            : "Your spending summary is on its way."}
         </p>
       </div>
     );
   }
 
   return (
-    <div className="p-6 rounded-3xl bg-white border-2 border-[#E7E5E4]" style={{ boxShadow: "var(--shadow-sm)" }}>
+    <div
+      className="p-6 rounded-3xl bg-white border-2 border-[#E7E5E4]"
+      style={{ boxShadow: "var(--shadow-sm)" }}
+    >
       <div className="flex items-start gap-3 mb-4">
         <div className="text-2xl">📧</div>
         <div>
@@ -94,6 +128,10 @@ export function EmailCapture({ totalSpend, topCategory }: Props) {
             )}
           </button>
         </div>
+
+        {error && (
+          <p className="text-xs text-red-600 px-1">{error}</p>
+        )}
 
         <label className="flex items-center gap-2 cursor-pointer">
           <input

@@ -148,6 +148,10 @@ export default function ResultsPage() {
                 <EmailCapture
                   totalSpend={data.totalSpend}
                   topCategory={data.categories[0]?.name || "Spending"}
+                  categories={data.categories}
+                  bankName={data.bankName}
+                  cardType={data.cardType}
+                  statementPeriod={data.statementPeriod}
                 />
               </div>
             </>
